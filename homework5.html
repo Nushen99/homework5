@@ -1,0 +1,151 @@
+<canvas id="canvas"> </canvas>
+<script> 
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+canvas.height = 500;
+canvas.width = 900;
+
+const gameover = function(){
+	break;
+}
+const rand = function(num) {
+  return Math.floor(Math.random() * num +1);
+};
+
+const background = new Image(); //object
+background.src = 'https://drive.google.com/uc?id=1wDaX5a3XJ_k_5Lc7UzpzlT_vsD5xQLVx'
+
+const goodGuyImg = new Image();
+goodGuyImg.src = 'https://drive.google.com/uc?id=1_k91TpAEjINR9xwpz7lG91gZLDCPZMk5'
+
+const badGuyImg = new Image();
+badGuyImg.src = 'https://drive.google.com/uc?id=1YtmCYeKvGWs-7SbN6IcrNE4prmK64vID';
+
+const gameData = {
+    hero: {
+	x: 150,
+	y: 300,
+	width: 100,
+	height: 100,
+	xDelta: 0,
+	yDelta: 0,
+	image: goodGuyImg,
+	draw: function() {
+		context.drawImage(this.image, this.x, this.y, this.width, this.height)},
+	
+	update: function() {
+		this.x += this.xDelta;
+		this.y += this.yDelta; }
+	},
+
+	
+};
+
+const array = [];
+const bad = function(count) {
+	for(let i=0;i<count;i++){
+           array[i]= {
+           	x: canvas.width+rand(canvas.width),
+			y: rand(400),
+			xDelta: rand(5),
+			yDelta: rand(5),
+			width: 90,
+			height: 90,
+			image: badGuyImg,
+			draw: function() {
+			context.drawImage(this.image, this.x, this.y, this.width, this.height)
+		    },
+			update: function() { 
+
+			this.x += -this.xDelta;
+			}
+
+				
+				}
+
+			}
+		}
+
+bad(10)
+
+const intersection = function(){
+        for (let i = 0; i < array.length; i++) {
+        if(gameData.hero.x < array[i].x +array[i].width/2 && gameData.hero.x+ gameData.hero.width/2 > array[i].x && gameData.hero.y < array[i].y + array[i].height/2 && gameData.hero.y+ gameData.hero.height/2 > array[i].y){
+          
+              alert('Game Over');
+              gameover();
+          
+           
+
+            }
+    };
+}
+
+const leftKey = 37;
+const upKey = 38;
+const rightKey = 39;
+const downKey = 40;
+document.addEventListener('keydown', function(event) {
+	if(event.keyCode === rightKey) {
+        gameData.hero.xDelta = 5;
+    }
+	}, false);
+document.addEventListener('keyup', function(event) {
+	gameData.hero.xDelta = 0;
+	}, false);
+document.addEventListener('keydown', function(event) {
+	if(event.keyCode === leftKey) {
+        gameData.hero.xDelta = -5;
+    }
+	}, false);
+document.addEventListener('keyup', function(event) {
+	gameData.hero.xDelta = 0;
+	}, false);
+document.addEventListener('keydown', function(event) {
+	if(event.keyCode === upKey) {
+        gameData.hero.yDelta = -5;
+    }
+	}, false);
+document.addEventListener('keyup', function(event) {
+	gameData.hero.yDelta = 0;
+	}, false);
+document.addEventListener('keydown', function(event) {
+	if(event.keyCode === downKey) {
+        gameData.hero.yDelta = 5;
+    }
+	}, false);
+document.addEventListener('keyup', function(event) {
+	gameData.hero.yDelta = 0;
+	}, false);
+  	
+const draw = function() {
+	gameData.hero.draw();
+	for (let i = 0; i < array.length; i++) {
+        array[i].draw();
+    }
+
+}
+
+
+const update = function() {
+ 		 	gameData.hero.update();
+ 		 	for (let i = 0; i < array.length; i++) {
+               array[i].update();
+    }
+}
+
+ 
+
+const loop = function() {
+	context.drawImage(background, 0, 0, canvas.width, canvas.height); 
+		
+	
+	draw();
+	update();
+	intersection();
+	
+	requestAnimationFrame(loop)
+}
+loop()
+</script>
+				

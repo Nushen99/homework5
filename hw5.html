@@ -1,0 +1,89 @@
+<canvas id="canvas"> </canvas>
+<script> 
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+canvas.height = 500;
+canvas.width = 500;
+
+const rand = function(num) {
+  return Math.floor(Math.random() * num +1);
+};
+ 
+ const colorArray = ['red', 'blue', 'orange' ];
+const createBoxes = function(count, canvasWidth, canvasHeight) {
+	let box =[];
+
+	for(let i=0; i<count; i++) {
+ 		 box[i] = {
+ 		 	width: 30,
+            height: 30,
+            x: rand(canvasWidth - 30),
+            y: rand(canvasHeight - 30),
+            xDelta: rand(6),
+            yDelta: rand(6),
+            color: colorArray[rand(colorArray.length) - 1],
+            draw: function() {
+              context.fillStyle = this.color;
+              context.fillRect(this.x, this.y, this.width, this.height)
+            },
+            update: function() {
+
+              if (this.x + this.width > canvasWidth || this.x < 0) {
+                this.xDelta = -this.xDelta;
+              }
+              if (this.y  + this.height> canvasHeight || this.y < 0) {
+                this.yDelta = -this.yDelta;
+              }
+              this.x += this.xDelta;
+              this.y += this.yDelta;
+              
+            }
+        }
+
+        
+         
+     }
+
+  return box;
+}
+
+const boxes = createBoxes(99,canvas.width,canvas.height);// [{},{},{},{},{}]
+
+
+
+
+const drawAll =function(arr){
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	for (let i=0; i < arr.length; i++) {
+		arr[i].draw();
+
+	}
+
+
+}
+
+const updateAll=function(arr){
+	for (let i=0; i < arr.length; i++) {
+		arr[i].update();
+		
+  }
+}
+
+const animate = function() {
+	drawAll(boxes);
+	updateAll(boxes);
+	requestAnimationFrame(animate);
+}
+
+
+// const animate = function() {
+// 	drawAll(createBoxes(6,canvas.width,canvas.height));
+// 	updateAll(createBoxes(6,canvas.width,canvas.height));
+// 	requestAnimationFrame(animate);
+// }
+
+animate();
+
+
+</script>
+				
